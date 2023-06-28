@@ -115,12 +115,12 @@ public class Calculator extends AppCompatActivity {
     private void fu() {
         String str = editText.getText().toString();
         try {
-
-        }catch (){
+            double d = Double.parseDouble(str);
+        }catch (NumberFormatException e){
             reset();
             Toast.makeText(this,"ERROR",Toast.LENGTH_SHORT).show();
         }
-        double d = Double.parseDouble(str);
+
         editText.setText(String.valueOf(-d));
 
         switch (status) {
