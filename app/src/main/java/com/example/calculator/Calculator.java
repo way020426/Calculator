@@ -114,6 +114,12 @@ public class Calculator extends AppCompatActivity {
     // 切换计算器
     private void fu() {
         String str = editText.getText().toString();
+        try {
+
+        }catch (){
+            reset();
+            Toast.makeText(this,"ERROR",Toast.LENGTH_SHORT).show();
+        }
         double d = Double.parseDouble(str);
         editText.setText(String.valueOf(-d));
 
