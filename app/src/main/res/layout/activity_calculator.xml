@@ -15,6 +15,13 @@
         android:textSize="30dp"
         android:editable="false"
         android:gravity="right" />
+    <EditText
+        android:id="@+id/resText"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:textSize="30dp"
+        android:editable="false"
+        android:gravity="right" />
 
     <TableLayout
         android:layout_width="match_parent"

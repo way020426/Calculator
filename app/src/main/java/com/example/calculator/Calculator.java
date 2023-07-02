@@ -22,17 +22,21 @@ public class Calculator extends AppCompatActivity {
     // 变量
     private int status;
     private EditText editText;
+    private EditText resText;
     private double num1;//第一个数字
     private double num2;//第二个数字
     private String op;//运算符
+    private StringBuilder expression;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
-
+        expression = new StringBuilder(); // 初始化表达式
         editText = findViewById(R.id.editText);
         editText.setText("0");
+        resText = findViewById(R.id.resText);
+        resText.setText("0");
     }
 
     public void doClick(View v){
@@ -64,7 +68,7 @@ public class Calculator extends AppCompatActivity {
 
         if (status == 3) {
             double result = end(num1, op, num2);
-            editText.setText(String.valueOf(result));
+            resText.setText(String.valueOf(result)); // 将结果显示在 resText 文本框中
             d = result;
         }
 
@@ -72,7 +76,9 @@ public class Calculator extends AppCompatActivity {
             reset();
             Toast.makeText(this, "不能给负数开根号", Toast.LENGTH_SHORT).show();
         } else {
-            editText.setText(Math.sqrt(d) + "");
+            double sqrtResult = Math.sqrt(d);
+            resText.setText(String.valueOf(sqrtResult));  // 将根号结果显示在 resText 文本框中
+            editText.setText(""); // 清空 editText 文本框
         }
 
         status = 0;
@@ -110,6 +116,7 @@ public class Calculator extends AppCompatActivity {
         num2 = 0;
         op = null;
         editText.setText("0");
+        resText.setText("0");
     }
     // 切换计算器
     private void fu() {
@@ -161,23 +168,24 @@ public class Calculator extends AppCompatActivity {
                 op = "+";
                 num2 = 0;
                 double num = end(num1, op, num2);
-                editText.setText(String.valueOf(num));
                 num1 = num;
                 status = 4;
+                expression.setLength(0); // 清空表达式
                 break;
             case 2:
                 num = end(num1, op, 0);
-                editText.setText(String.valueOf(num));
                 num1 = num;
                 status = 4;
+                expression.setLength(0); // 清空表达式
                 break;
             case 3:
                 double result = end(num1, op, num2);
-                editText.setText(String.valueOf(result));
                 num1 = result;
                 status = 4;
+                expression.setLength(0); // 清空表达式
                 break;
         }
+        editText.setText(expression.toString());
     }
 
 
@@ -201,6 +209,7 @@ public class Calculator extends AppCompatActivity {
                 }
                 break;
         }
+        resText.setText(String.valueOf(r)); // 将结果显示在 resText 文本框中
         Toast.makeText(this, "计算完成", Toast.LENGTH_SHORT).show();
         return r;
     }
@@ -248,11 +257,15 @@ public class Calculator extends AppCompatActivity {
                 num1 = 0;
                 status = 2;
                 op = s;
+                expression.append(num1).append(op); // 更新表达式
+                editText.setText(expression.toString());
                 break;
             //正在输入第一个数
             case 1:
                 op = s;
                 status = 2;
+                expression.append(op); // 更新表达式
+                editText.setText(expression.toString());
                 break;
             //点完运算符，再点运算符
             case 2:
@@ -264,6 +277,8 @@ public class Calculator extends AppCompatActivity {
                 num1 = end(num1, op, num2);
                 editText.setText(String.valueOf(num1));
                 op = s;
+                expression.setLength(0); // 清空表达式
+                expression.append(num1).append(op);
                 status = 2;
                 break;
             case 4:
@@ -284,12 +299,14 @@ public class Calculator extends AppCompatActivity {
                 }else {
                     editText.setText(s);
                     num1 = Double.parseDouble(s);
+                    expression.append(s); // 更新表达式
                 }
                 status = 1;
                 break;
             case 1:
                 if(editText.getText().toString().equals("0")){
                     editText.setText(s);
+                    expression.append(s); // 更新表达式
                 }else {
                     editText.append(s);
                 }
@@ -297,9 +314,11 @@ public class Calculator extends AppCompatActivity {
                 break;
             //点击符号后输入第二个数字
             case 2:
-                editText.setText(s);
+                editText.append(s);
                 num2 = Double.parseDouble(s);
                 status = 3;
+                expression.append(s); // 更新表达式
+                editText.setText(expression.toString());
                 break;
             //输入第二个数字的状态
             case 3:
@@ -307,14 +326,18 @@ public class Calculator extends AppCompatActivity {
                     editText.setText(s);
                 }else {
                     editText.append(s);
+                    expression.append(s); // 更新表达式
                 }
                 num2 = Double.parseDouble(editText.getText().toString());
+                editText.setText(expression.toString());
                 break;
             case 4: //新的状态，表示已经完成一次计算，但是用户继续输入数字，因此应该开始新的计算
                 editText.setText(s);
                 num1 = Double.parseDouble(s);
                 op = null;
                 status = 1;
+                expression.setLength(0); // 清空表达式
+                expression.append(s); // 更新表达式
                 break;
         }
     }
