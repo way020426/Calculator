@@ -117,6 +117,7 @@ public class Calculator extends AppCompatActivity {
         op = null;
         editText.setText("0");
         resText.setText("0");
+        expression.setLength(0); // 清空表达式
     }
     // 切换计算器
     private void fu() {
